@@ -1,0 +1,15 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="GlassCameraControl_jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/GlassCameraControl_jar</output-path>
+    <root id="archive" name="GlassCameraControl.jar">
+      <element id="module-output" name="GlassCameraControl" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../CameraParams/out/artifacts/CameraParams_jar/CameraParams.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/myJar/guava-13.0.1.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/myJar/ddmlib.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/myJar/jdom.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/myJar/poi-3.10.1-20140818.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../InitUserParams/out/artifacts/InitUserParams_jar/InitUserParams.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/myJar/JTattoo-1.6.11.jar" path-in-jar="/" />
+    </root>
+  </artifact>
+</component>

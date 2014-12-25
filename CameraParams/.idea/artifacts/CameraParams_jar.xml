@@ -1,0 +1,11 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="CameraParams:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/CameraParams_jar</output-path>
+    <root id="archive" name="CameraParams.jar">
+      <element id="module-output" name="CameraParams" />
+      <element id="directory" name="META-INF">
+        <element id="file-copy" path="$PROJECT_DIR$/META-INF/MANIFEST.MF" />
+      </element>
+    </root>
+  </artifact>
+</component>
