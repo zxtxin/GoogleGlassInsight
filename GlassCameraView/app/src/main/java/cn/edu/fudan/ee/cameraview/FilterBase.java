@@ -2,8 +2,6 @@ package cn.edu.fudan.ee.cameraview;
 
 import android.hardware.Camera;
 
-import java.nio.ByteBuffer;
-
 /**
  * Created by zxtxin on 2014/12/3.
  */
@@ -23,6 +21,6 @@ public abstract class FilterBase {
         this.viewWidth = width;
         this.viewHeight = height;
     }
-    abstract public void draw(ByteBuffer frameData, Camera.Size size, int pixelAmounts);
+    abstract public void draw(byte[] frameData, Camera.Size size, int pixelAmounts);
 
 }

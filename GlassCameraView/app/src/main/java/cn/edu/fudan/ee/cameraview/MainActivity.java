@@ -20,7 +20,6 @@ import android.widget.FrameLayout;
 import android.widget.Toast;
 
 import java.io.IOException;
-import java.nio.ByteBuffer;
 
 import cn.edu.fudan.ee.cameraview.DataBase.LoadInitialParams;
 import cn.edu.fudan.ee.cameraview.SocketCommunication.SocketService;
@@ -58,7 +57,7 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback, Ca
         mCamera = Camera.open();
         params = mCamera.getParameters();
         params.setPreviewSize(640,360);
-        params.setPreviewFpsRange(30000,30000);
+ //       params.setPreviewFpsRange(30000,30000);
         params.setPreviewFormat(ImageFormat.NV21);
         previewSize = params.getPreviewSize();
         pixelAmounts = previewSize.height*previewSize.width;
@@ -101,7 +100,7 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback, Ca
             mCamera = Camera.open();
             params = mCamera.getParameters();
             params.setPreviewSize(640, 360);
-            params.setPreviewFpsRange(30000,30000);
+     //       params.setPreviewFpsRange(30000,30000);
             params.setPreviewFormat(ImageFormat.NV21);
             cameraParamsHandler = new CameraParamsHandler(this, renderer, mCamera, params);
             loadInitialParams = LoadInitialParams.getInstance(this);
@@ -168,7 +167,7 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback, Ca
 
 //        frameData.position(0);
 //        frameData.put(data);
-        renderer.setCapturedData(ByteBuffer.wrap(data));
+        renderer.setCapturedData(data);
         glSurfaceView.requestRender();
         mCamera.addCallbackBuffer(mCallbackBuffer);
     }

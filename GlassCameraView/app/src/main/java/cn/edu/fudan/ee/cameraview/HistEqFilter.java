@@ -2,6 +2,7 @@ package cn.edu.fudan.ee.cameraview;
 
 import android.hardware.Camera;
 import android.opengl.GLES20;
+import android.util.Log;
 
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
@@ -11,6 +12,10 @@ import java.util.Arrays;
  * Created by zxtxin on 2014/12/3.
  */
 public class HistEqFilter extends FilterBase {
+    static
+    {
+        System.loadLibrary("nativemethod");
+    }
     private final int histGenProgram;
     private final int prefixSumProgram;
     private final int histRemapProgram;
@@ -30,6 +35,7 @@ public class HistEqFilter extends FilterBase {
     private int[] fbo;
     private int downsamplingFactor = 31;
     private int[] histogramBin = new int[256];
+    private byte[] prefixsum = new byte[256];
     private ByteBuffer prefixSumBuffer;
 
 
@@ -58,16 +64,17 @@ public class HistEqFilter extends FilterBase {
     }
 
     @Override
-    public void draw(ByteBuffer frameData, Camera.Size size, int pixelAmounts) {
-//        long startTime, time1, time2, time3;
-//        startTime=System.nanoTime();// 获取开始时间
-        GenHist(frameData,pixelAmounts);
+    public void draw(byte[] frameData, Camera.Size size, int pixelAmounts) {
+        long startTime, time1, time2, time3;
+        startTime=System.nanoTime();// 获取开始时间
+//        GenHist(frameData,pixelAmounts);
 //        time1=System.nanoTime();// 获取结束时间
 //        Log.i("draw1：", (time1 - startTime) + "ns");
-        HistPrefixSum();
-//        time2=System.nanoTime();// 获取结束时间
-//        Log.i("draw2：", (time2 - time1) + "ns");
-        HistRemap(frameData,size,pixelAmounts);
+//        HistPrefixSum();
+        NativeMethod.CountAndSum(frameData,prefixsum,pixelAmounts,downsamplingFactor);
+        time2=System.nanoTime();// 获取结束时间
+        Log.i("draw2：", (time2 - startTime) + "ns");
+        HistRemap(ByteBuffer.wrap(frameData),size,pixelAmounts);
 //        time3=System.nanoTime();// 获取结束时间
 //        Log.i("draw3：", (time3 - time2) + "ns");
     }
@@ -161,7 +168,7 @@ public class HistEqFilter extends FilterBase {
         GLES20.glActiveTexture(GLES20.GL_TEXTURE2);
         GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, tex[0]);
         prefixSumBuffer.position(0);
-        GLES20.glTexImage2D(GLES20.GL_TEXTURE_2D,0,GLES20.GL_LUMINANCE,256,1,0,GLES20.GL_LUMINANCE,GLES20.GL_UNSIGNED_BYTE,prefixSumBuffer);
+        GLES20.glTexImage2D(GLES20.GL_TEXTURE_2D,0,GLES20.GL_LUMINANCE,256,1,0,GLES20.GL_LUMINANCE,GLES20.GL_UNSIGNED_BYTE,ByteBuffer.wrap(prefixsum));
         GLES20.glUniform1i(tex2Uniform_HistRe, 2);
 
         GLES20.glVertexAttribPointer(positionAttr_HistRe, COORDS_PER_VERTEX, GLES20.GL_FLOAT, false, 0, vertexBuffer);

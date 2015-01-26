@@ -2,11 +2,11 @@
 <items version="2" >
 
     <item
-        jar="E:\GoogleGlass\GlassCameraView\app\libs\CameraParams.jar"
+        jar="E:\GoogleGlassInsight\GlassCameraView\app\libs\CameraParams.jar"
         jumboMode="false"
         revision="21.0.2"
         sha1="1da4af58156116650dcdd94641d7fd5f08e2a67d">
-        <dex dex="E:\GoogleGlass\GlassCameraView\app\build\intermediates\pre-dexed\debug\CameraParams-3c78362c9ba933ce01d71f4815e6c87828b46da1.jar" />
+        <dex dex="E:\GoogleGlassInsight\GlassCameraView\app\build\intermediates\pre-dexed\debug\CameraParams-1fcffec9fb62ffe452b1463319f2d3af988365d3.jar" />
     </item>
 
 </items>

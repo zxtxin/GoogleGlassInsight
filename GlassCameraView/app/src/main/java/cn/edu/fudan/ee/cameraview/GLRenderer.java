@@ -6,8 +6,6 @@ import android.opengl.GLSurfaceView;
 import android.util.Log;
 import android.view.WindowManager;
 
-import java.nio.ByteBuffer;
-
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
@@ -26,7 +24,7 @@ public class GLRenderer implements GLSurfaceView.Renderer {
     private HistEqFilter histogramEqualizationFilter;
     private RGBFilter rgbFilter;
     OpenGLESSupervisor glesInstance;
-    private ByteBuffer rawData;
+    private byte[] rawData;
     private boolean drawFrameFinished = false;
     int[] mScreenSize;// 屏幕尺寸
     // 视野窗口位置及尺寸
@@ -44,7 +42,7 @@ public class GLRenderer implements GLSurfaceView.Renderer {
         glesInstance = new OpenGLESSupervisor(context);
         histogramEqualizationFilter = new HistEqFilter(glesInstance);
         rgbFilter = new RGBFilter(glesInstance);
-        filter = rgbFilter;
+        filter = histogramEqualizationFilter;
         mScreenSize = getScreenSize(context);// 获取屏幕尺寸
         setViewPortSize(0, 0, 100);// 设置初始视野窗口位置及尺寸
     }
@@ -55,7 +53,7 @@ public class GLRenderer implements GLSurfaceView.Renderer {
         if(filter!= null)
             filter.setViewPort(0, 0, width,height);
     }
-    public void setCapturedData(ByteBuffer rawData) {
+    public void setCapturedData(byte[] rawData) {
         this.rawData = rawData;
     }
 

@@ -10,6 +10,13 @@ android {
         targetSdkVersion 19
         versionCode 1
         versionName "1.0"
+        ndk{
+            moduleName "nativemethod"
+        }
+        sourceSets.main{
+            jni.srcDirs = []
+            jniLibs.srcDir 'libs'
+        }
     }
     buildTypes {
         release {

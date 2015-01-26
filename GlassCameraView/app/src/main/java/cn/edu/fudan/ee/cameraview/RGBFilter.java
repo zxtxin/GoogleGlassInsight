@@ -32,7 +32,8 @@ public class RGBFilter extends FilterBase{
     }
 
     @Override
-    public void draw(ByteBuffer frameData, Camera.Size size, int pixelAmounts) {
+    public void draw(byte[] frameData_byte, Camera.Size size, int pixelAmounts) {
+        ByteBuffer frameData = ByteBuffer.wrap(frameData_byte);
         frameData.position(0);
         GLES20.glUseProgram(rgbProgram);
         GLES20.glVertexAttribPointer(positionAttr_rgb, COORDS_PER_VERTEX, GLES20.GL_FLOAT, false, 0, vertexBuffer);
