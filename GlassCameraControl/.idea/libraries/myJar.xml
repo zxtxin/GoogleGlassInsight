@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="myJar">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/myJar/jdom.jar!/" />
+      <root url="jar://$PROJECT_DIR$/myJar/poi-3.10.1-20140818.jar!/" />
+      <root url="jar://$PROJECT_DIR$/myJar/guava-13.0.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/myJar/ddmlib.jar!/" />
+      <root url="jar://$PROJECT_DIR$/myJar/JTattoo-1.6.11.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

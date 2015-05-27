@@ -11,8 +11,8 @@ import java.awt.*;
 import java.awt.event.*;
 
 /**
- * Created by hbj on 2014/12/1.
- */
+* Created by hbj on 2014/12/1.
+*/
 public class UI extends JFrame {
     public JFrame jFrame;
     public JPanel jPanel;

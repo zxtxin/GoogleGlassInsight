@@ -12,7 +12,7 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.os.Message;
 import android.util.Log;
-import android.view.GestureDetector;
+import android.view.GestureDetector ;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -54,26 +54,12 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback, Ca
         glSurfaceView = new GLSurfaceView(this);
         mHolder = surfaceView.getHolder();
         mHolder.addCallback(this);
-        mCamera = Camera.open();
-        params = mCamera.getParameters();
-        params.setPreviewSize(640,360);
- //       params.setPreviewFpsRange(30000,30000);
-        params.setPreviewFormat(ImageFormat.NV21);
-        previewSize = params.getPreviewSize();
-        pixelAmounts = previewSize.height*previewSize.width;
+
+        Initialize_1();
         renderer = new GLRenderer(this,previewSize,pixelAmounts);
-        cameraParamsHandler = new CameraParamsHandler(this, renderer, mCamera, params);
-        loadInitialParams = LoadInitialParams.getInstance(this);
-        loadInitialParams.myParams.params3 = false;
-        Toast.makeText(MainActivity.this, "原始效果", Toast.LENGTH_SHORT).show();
-        cameraParamsHandler.Zoom(MainActivity.this, loadInitialParams.myParams.params1);// 应用缩放效果
-        cameraParamsHandler.WhiteBalance(MainActivity.this, loadInitialParams.myParams.params2);// 应用白平衡效果
-        loadInitialParams.myParams.params4 = 100;// 原始画面比例为100%
-        loadInitialParams.myParams.params5 = 0;// 原始画面起始横坐标为0
-        loadInitialParams.myParams.params6 = 0;// 原始画面起始纵坐标为0
-        mCamera.setParameters(params);
-        callbackBufferSize = pixelAmounts * 3/2;
-        mCallbackBuffer = new byte[callbackBufferSize];
+        Initialize_2();
+
+
 //        frameData = ByteBuffer.allocateDirect(callbackBufferSize);
 
         glSurfaceView.setEGLContextClientVersion(2);
@@ -86,9 +72,37 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback, Ca
 
         // 手势检测
         mGestureDetector = createGestureDetector(MainActivity.this);
+        mGestureDetector.setOnDoubleTapListener(new DoubleTapListener());
         // Socket通信
         Intent intent = new Intent(MainActivity.this, SocketService.class);
         bindService(intent, conn, Context.BIND_AUTO_CREATE);
+    }
+
+    public void Initialize_1()
+    {
+        mCamera = Camera.open();
+        params = mCamera.getParameters();
+        params.setPreviewSize(640,360);
+        params.setPreviewFpsRange(30000,30000);
+        params.setPreviewFormat(ImageFormat.NV21);
+        previewSize = params.getPreviewSize();
+        pixelAmounts = previewSize.height*previewSize.width;
+    }
+
+    public void Initialize_2()
+    {
+        cameraParamsHandler = new CameraParamsHandler(this, renderer, mCamera, params);
+        loadInitialParams = LoadInitialParams.getInstance(this);
+        loadInitialParams.myParams.params3 = false;
+        Toast.makeText(MainActivity.this, "原始效果", Toast.LENGTH_SHORT).show();
+        cameraParamsHandler.Zoom(MainActivity.this, loadInitialParams.myParams.params1);// 应用缩放效果
+        cameraParamsHandler.WhiteBalance(MainActivity.this, loadInitialParams.myParams.params2);// 应用白平衡效果
+        loadInitialParams.myParams.params4 = 100;// 原始画面比例为100%
+        loadInitialParams.myParams.params5 = 0;// 原始画面起始横坐标为0
+        loadInitialParams.myParams.params6 = 0;// 原始画面起始纵坐标为0
+        mCamera.setParameters(params);
+        callbackBufferSize = pixelAmounts * 3/2;
+        mCallbackBuffer = new byte[callbackBufferSize];
     }
 
     @Override
@@ -97,25 +111,8 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback, Ca
         super.onResume();
         glSurfaceView.onResume();
         if (mCamera == null) {
-            mCamera = Camera.open();
-            params = mCamera.getParameters();
-            params.setPreviewSize(640, 360);
-     //       params.setPreviewFpsRange(30000,30000);
-            params.setPreviewFormat(ImageFormat.NV21);
-            cameraParamsHandler = new CameraParamsHandler(this, renderer, mCamera, params);
-            loadInitialParams = LoadInitialParams.getInstance(this);
-            loadInitialParams.myParams.params3 = false;
-            Toast.makeText(MainActivity.this, "原始效果", Toast.LENGTH_SHORT).show();
-            cameraParamsHandler.Zoom(MainActivity.this, loadInitialParams.myParams.params1);// 应用缩放效果
-            cameraParamsHandler.WhiteBalance(MainActivity.this, loadInitialParams.myParams.params2);// 应用白平衡效果
-            loadInitialParams.myParams.params4 = 100;// 原始画面比例为100%
-            loadInitialParams.myParams.params5 = 0;// 原始画面起始横坐标为0
-            loadInitialParams.myParams.params6 = 0;// 原始画面起始纵坐标为0
-            mCamera.setParameters(params);
-            previewSize = params.getPreviewSize();
-            pixelAmounts = previewSize.height * previewSize.width;
-            callbackBufferSize = pixelAmounts * 3 / 2;
-            mCallbackBuffer = new byte[callbackBufferSize];
+            Initialize_1();
+            Initialize_2();
         }
     }
 
@@ -261,6 +258,28 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback, Ca
             }
         });
         return gestureDetector;
+    };
+
+    // DoubleTapListener监听
+    private class DoubleTapListener implements GestureDetector.OnDoubleTapListener{
+
+        public boolean onSingleTapConfirmed(MotionEvent e) {
+            Log.i("DoubleTapGesture", "onSingleTapConfirmed");
+//            Toast.makeText(MainActivity.this, "onSingleTapConfirmed", Toast.LENGTH_SHORT).show();
+            return true;
+        }
+
+        public boolean onDoubleTap(MotionEvent e) {
+            Log.i("DoubleTapGesture", "onDoubleTap");
+//            Toast.makeText(MainActivity.this, "onDoubleTap", Toast.LENGTH_SHORT).show();
+            return true;
+        }
+
+        public boolean onDoubleTapEvent(MotionEvent e) {
+//            Log.i("DoubleTapGesture", "onDoubleTapEvent");
+//            Toast.makeText(MainActivity.this, "onDoubleTapEvent", Toast.LENGTH_SHORT).show();
+            return true;
+        }
     };
 
     // 将事件发送到手势检测器

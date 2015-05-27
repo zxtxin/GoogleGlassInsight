@@ -42,7 +42,7 @@ public class GLRenderer implements GLSurfaceView.Renderer {
         glesInstance = new OpenGLESSupervisor(context);
         histogramEqualizationFilter = new HistEqFilter(glesInstance);
         rgbFilter = new RGBFilter(glesInstance);
-        filter = histogramEqualizationFilter;
+        filter = rgbFilter;
         mScreenSize = getScreenSize(context);// 获取屏幕尺寸
         setViewPortSize(0, 0, 100);// 设置初始视野窗口位置及尺寸
     }

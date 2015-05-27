@@ -7,21 +7,7 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="ddmlib" level="project" />
-    <orderEntry type="module-library">
-      <library>
-        <CLASSES>
-          <root url="jar://$MODULE_DIR$/../guava-13.0.1.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
-    <orderEntry type="library" name="jdom" level="project" />
-    <orderEntry type="library" name="guava-13.0.1" level="project" />
-    <orderEntry type="library" name="poi-3.10.1-20140818" level="project" />
-    <orderEntry type="library" name="CameraParams" level="project" />
-    <orderEntry type="library" name="JTattoo-1.6.11" level="project" />
+    <orderEntry type="library" name="myJar" level="project" />
+    <orderEntry type="library" name="GlassCameraControl" level="project" />
   </component>
 </module>
-

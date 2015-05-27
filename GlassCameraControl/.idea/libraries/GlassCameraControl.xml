@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="GlassCameraControl">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/out/artifacts/GlassCameraControl_jar/GlassCameraControl.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
