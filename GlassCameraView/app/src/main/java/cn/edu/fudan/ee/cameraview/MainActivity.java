@@ -44,7 +44,7 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback, Ca
     private int initialZoom;// 手指触摸触摸屏时的初始相机zoom倍数
     LoadInitialParams loadInitialParams;// 加载相机初始参数类
 
-    @Override
+
     protected void onCreate(Bundle savedInstanceState) {
         Log.i("Activity", "---------->>onCreate");
         super.onCreate(savedInstanceState);
@@ -105,7 +105,7 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback, Ca
         mCallbackBuffer = new byte[callbackBufferSize];
     }
 
-    @Override
+
     protected void onResume() {
         Log.i("Activity", "---------->>onResume");
         super.onResume();
@@ -116,7 +116,7 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback, Ca
         }
     }
 
-    @Override
+
     protected void onPause() {
         Log.i("Activity", "---------->>onPause");
         super.onPause();
@@ -131,13 +131,13 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback, Ca
         unbindService(conn);
     }
 
-    @Override
+
     protected void onDestroy() {
         Log.i("Activity", "---------->>onDestroy");
         super.onDestroy();
     }
 
-    @Override
+
     public void surfaceCreated(SurfaceHolder holder) {
         try {
             mCamera.setPreviewDisplay(holder);
@@ -149,17 +149,16 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback, Ca
         mCamera.startPreview();
     }
 
-    @Override
+
     public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
 
     }
 
-    @Override
+
     public void surfaceDestroyed(SurfaceHolder holder) {
 
     }
 
-    @Override
     public void onPreviewFrame(byte[] data, Camera camera) {
 
 //        frameData.position(0);
@@ -171,12 +170,12 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback, Ca
 
     private ServiceConnection conn = new ServiceConnection(){
 
-        @Override
+
         public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
             mBoundService = ((SocketService.LocalBinder)iBinder).getService();
         }
 
-        @Override
+
         public void onServiceDisconnected(ComponentName componentName) {
             mBoundService = null;
         }
@@ -189,7 +188,7 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback, Ca
     private GestureDetector createGestureDetector(Context context)
     {
         GestureDetector gestureDetector = new GestureDetector(context, new GestureDetector.OnGestureListener() {
-            @Override
+
             public boolean onDown(MotionEvent motionEvent) {
                 // 按下
                 Log.i("Gesture", "onDown");
@@ -197,20 +196,19 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback, Ca
                 return false;
             }
 
-            @Override
+
             public void onShowPress(MotionEvent motionEvent) {
                 // down事件发生而move或者up还没发生前触发该事件
                 Log.i("Gesture", "onShowPress");
             }
 
-            @Override
             public boolean onSingleTapUp(MotionEvent motionEvent) {
                 // 手指离开触摸屏
                 Log.i("Gesture", "onSingleTapUp");
                 return false;
             }
 
-            @Override
+
             public boolean onScroll(MotionEvent motionEvent, MotionEvent motionEvent2, float v, float v2) {
                 // 手指在触摸屏上滑动
                 Log.i("Gesture", "onScroll");
@@ -239,7 +237,7 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback, Ca
                 return false;
             }
 
-            @Override
+
             public void onLongPress(MotionEvent motionEvent) {
                 // 手指按下一段时间，并且没有松开
                 Log.i("Gesture", "onLongPress");
@@ -250,7 +248,7 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback, Ca
                 cameraParamsHandler.myHandler.sendMessage(msg);
             }
 
-            @Override
+
             public boolean onFling(MotionEvent motionEvent, MotionEvent motionEvent2, float v, float v2) {
                 // 手指在触摸屏上迅速移动，并松开的动作
                 Log.i("Gesture", "onFling");
@@ -283,7 +281,7 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback, Ca
     };
 
     // 将事件发送到手势检测器
-    @Override
+
     public boolean onGenericMotionEvent(MotionEvent event)
     {
         if(mGestureDetector != null)

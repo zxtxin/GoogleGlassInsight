@@ -23,7 +23,7 @@ import cn.edu.fudan.ee.glasscamera.CameraParams;
 public class SocketService extends Service {
     private final IBinder mBinder = new LocalBinder();
 
-    @Override
+
     public IBinder onBind(Intent intent)
     {
         return mBinder;
@@ -47,7 +47,7 @@ public class SocketService extends Service {
     // 当PC端界面关闭时，turnOnCommunication为false，退出发送、接收循环，重新循环等待serverSocket.accept()
     public static boolean turnOnCommunication;
 
-    @Override
+
     public void onCreate()
     {
         Log.i("Service", "---------->>onCreate");
