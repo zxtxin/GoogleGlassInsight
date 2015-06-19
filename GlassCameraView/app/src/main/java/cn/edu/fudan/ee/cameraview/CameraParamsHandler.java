@@ -77,31 +77,6 @@ public class CameraParamsHandler {
                 mCamera.setParameters(params);
                 Log.i("Change camera parameters","changed");
 
-                // 相机参数改变，如果glass与PC已经建立了socket连接，则告诉PC让其自动改变界面控件的值
-                // 如果未建立连接，仅仅是单独使用glass，则不需通知PC
-                // 此动作具体实现是在SocketService.java中执行
-                if(SocketService.turnOnCommunication)
-                {
-                    Log.i("is socket connected in handler?", "true");
-//                    Toast.makeText(mContext, "socket connected", Toast.LENGTH_SHORT).show();
-                    try
-                    {
-                        SocketService.objOut.writeObject(receiveParams);
-                        Log.i("writeObject","OK ");
-                        Log.i("send params1 from handler to PC", ""+receiveParams.params1);
-                        Log.i("send params2 from handler  to PC", ""+receiveParams.params2);
-                        SocketService.objOut.reset();// writeObject后，一定要reset()
-                    }
-                    catch (Exception e)
-                    {
-                        e.printStackTrace();
-                    }
-                }
-                else
-                {
-//                    Toast.makeText(mContext, "socket disconnected", Toast.LENGTH_SHORT).show();
-                    Log.i("is socket connected in handler?", "false");
-                }
 
                 // 每次接收到相机参数，立即保存相机参数到glass的内存中
                 try {

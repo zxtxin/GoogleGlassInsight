@@ -7,11 +7,15 @@ import android.os.IBinder;
 import android.os.Message;
 import android.util.Log;
 
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.net.ServerSocket;
-import java.net.Socket;
+import com.github.nkzawa.emitter.Emitter;
+import com.github.nkzawa.socketio.client.IO;
+import com.github.nkzawa.socketio.client.Socket;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.json.JSONTokener;
+
+import java.net.URISyntaxException;
 
 import cn.edu.fudan.ee.cameraview.MainActivity;
 import cn.edu.fudan.ee.glasscamera.CameraParams;
@@ -22,6 +26,7 @@ import cn.edu.fudan.ee.glasscamera.CameraParams;
 
 public class SocketService extends Service {
     private final IBinder mBinder = new LocalBinder();
+    private Socket socket;
 
 
     public IBinder onBind(Intent intent)
@@ -37,12 +42,8 @@ public class SocketService extends Service {
         }
     }
 
-    private ServerSocket serverSocket = null;
-    public static Socket socket = null;
-    private final int SERVER_PORT = 22222;
-    public static ObjectInputStream objIn = null;// 用于socket通信
-    public static ObjectOutputStream objOut = null;// 用于socket通信
-    CameraParams cameraParams = null;
+
+
     // 当进行通信的时候，turnOnCommunication为true，一直与PC进行发送、接收数据的过程
     // 当PC端界面关闭时，turnOnCommunication为false，退出发送、接收循环，重新循环等待serverSocket.accept()
     public static boolean turnOnCommunication;
@@ -57,74 +58,56 @@ public class SocketService extends Service {
             @Override
             public void run()
             {
-                try
-                {
-                    serverSocket = new ServerSocket(SERVER_PORT);
-                }
-                catch (IOException e)
-                {
+                try {
+                    socket = IO.socket("http://192.168.23.1:8000");
+                } catch (URISyntaxException e) {
                     e.printStackTrace();
                 }
-                while(true)
-                {
-                    try
-                    {
-                        socket = serverSocket.accept();
-                        Log.d("SocketServer", "Accepted");
-
-                        objIn = new ObjectInputStream(socket.getInputStream());
-                        Log.i("objIn","initialed");
-                        objOut = new ObjectOutputStream(socket.getOutputStream());
-                        Log.i("objOut","initialed");
-
-                        turnOnCommunication = true;
-
-                        while (turnOnCommunication)
-                        {
-                            try
-                            {
-                                // Input
-                                Object obj = objIn.readObject();
-                                Log.i("is received obj null?", (obj==null)+"");
-                                if(obj != null) {
-                                    cameraParams = (CameraParams)obj;
-                                    Log.i("readObject","OK ");
-                                    Log.i("receive myParams.params1 from PC", "params1 : "+cameraParams.params1);
-                                    Log.i("receive myParams.params2 from PC", "params2 : "+cameraParams.params2);
-                                    Message msg = new Message();
-                                    msg.what = 0;
-                                    msg.obj = obj;
-                                    MainActivity.cameraParamsHandler.myHandler.sendMessage(msg);
-                                    Log.i("Send received message from server  to handler", "sent");
-
-                                    // Output在CameraParamsHandler.java的handler中实现
-
-                                } else {
-                                    turnOnCommunication = false;
-                                }
-                            }
-                            catch (IOException e)
-                            {
-                                e.printStackTrace();
-                                turnOnCommunication = false;
-                                Log.i("Wrong","objIn");
-                                break;
-                            }
-                            catch (ClassNotFoundException e)
-                            {
-                                e.printStackTrace();
-                                turnOnCommunication = false;
-                                break;
-                            }
+                socket.on("send_data",new Emitter.Listener(){
+                    @Override
+                    public void call(Object... args) {
+                        JSONObject jsonReceived = null;
+                        try {
+                            jsonReceived = new JSONObject(new JSONTokener(args[0].toString()));
+                        } catch (JSONException e) {
+                            e.printStackTrace();
                         }
+                        Log.e("JSON",jsonReceived.toString());
+                        CameraParams obj = new CameraParams();
+                        try {
+                            obj.params1 = jsonReceived.getInt("1");
+                            obj.params2 = jsonReceived.getInt("2");
+                            obj.params3 = jsonReceived.getInt("3")==1?true:false;
+                            obj.params4 = jsonReceived.getInt("4");
+                            obj.params5 = jsonReceived.getInt("5");
+                            obj.params6 = jsonReceived.getInt("6");
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                        Message msg = new Message();
+                        msg.what = 0;
+                        msg.obj = obj;
+                        MainActivity.cameraParamsHandler.myHandler.sendMessage(msg);
+                        Log.i("Send received message from server  to handler", "sent");
                     }
-                    catch(IOException e)
-                    {
-                        e.printStackTrace();
-                        turnOnCommunication = false;
-                        Log.i("Wrong","socket");
+                }).on(Socket.EVENT_DISCONNECT,new Emitter.Listener() {
+                    @Override
+                    public void call(Object... args) {
+                        //        Toast.makeText(getApplicationContext(),getString(R.string.disconnected),Toast.LENGTH_SHORT);
+                        socket.connect();
                     }
-                }
+                }).on(Socket.EVENT_CONNECT,new Emitter.Listener() {
+                    @Override
+                    public void call(Object... args) {
+                        //  Toast.makeText(getApplicationContext(),getString(R.string.connected),Toast.LENGTH_SHORT);
+
+                    }
+                });
+
+                socket.connect();
+                Log.i("Connection",""+socket.connected());
+
             }
         }).start();
     }
@@ -141,13 +124,5 @@ public class SocketService extends Service {
     {
         Log.i("Service", "---------->>onDestroy");
         super.onDestroy();
-        // 在退出应用之前发送空的数据告诉PC
-        try {
-            if(objOut != null) {
-                objOut.writeObject(null);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 }
